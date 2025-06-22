@@ -1,0 +1,27 @@
+name: Build Projects
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up JDK 24
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: '24'
+
+            - name: Set up Gradle
+              uses: gradle/gradle-build-action@v3
+
+            - name: Grant execute permission for Gradle wrapper
+              run: chmod +x ./ch02/01-quickpay-spring-data-jpa/gradlew
+
+            - name: Build projects
+              run: |
+                  ./ch02/01-quickpay-spring-data-jpa/gradlew -p ./ch02/01-quickpay-spring-data-jpa/ build
