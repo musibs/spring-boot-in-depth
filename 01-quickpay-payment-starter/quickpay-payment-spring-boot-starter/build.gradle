@@ -1,0 +1,4 @@
+dependencies {
+    api project(':quickpay-payment-autoconfigure')
+    api 'org.springframework.boot:spring-boot-starter'
+}

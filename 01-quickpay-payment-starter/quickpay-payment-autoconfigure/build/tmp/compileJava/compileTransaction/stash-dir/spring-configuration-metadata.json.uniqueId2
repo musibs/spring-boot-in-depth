@@ -1,0 +1,134 @@
+{
+  "groups": [
+    {
+      "name": "quickpay.payment",
+      "type": "com.quickpay.payment.config.QuickPayProperties",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties"
+    },
+    {
+      "name": "quickpay.payment.cache",
+      "type": "com.quickpay.payment.config.QuickPayProperties$CacheConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties",
+      "sourceMethod": "cache()"
+    },
+    {
+      "name": "quickpay.payment.observability",
+      "type": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties",
+      "sourceMethod": "observability()"
+    },
+    {
+      "name": "quickpay.payment.observability.logging",
+      "type": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$LoggingConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig",
+      "sourceMethod": "logging()"
+    },
+    {
+      "name": "quickpay.payment.observability.metrics",
+      "type": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$MetricsConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig",
+      "sourceMethod": "metrics()"
+    },
+    {
+      "name": "quickpay.payment.observability.tracing",
+      "type": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$TracingConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig",
+      "sourceMethod": "tracing()"
+    },
+    {
+      "name": "quickpay.payment.retry",
+      "type": "com.quickpay.payment.config.QuickPayProperties$RetryConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties",
+      "sourceMethod": "retry()"
+    },
+    {
+      "name": "quickpay.payment.security",
+      "type": "com.quickpay.payment.config.QuickPayProperties$SecurityConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties",
+      "sourceMethod": "security()"
+    },
+    {
+      "name": "quickpay.payment.security.jwt",
+      "type": "com.quickpay.payment.config.QuickPayProperties$SecurityConfig$JwtConfig",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$SecurityConfig",
+      "sourceMethod": "jwt()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "quickpay.payment.cache.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$CacheConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.cache.ttl",
+      "type": "java.time.Duration",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$CacheConfig",
+      "defaultValue": "5m"
+    },
+    {
+      "name": "quickpay.payment.cache.type",
+      "type": "java.lang.String",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$CacheConfig",
+      "defaultValue": "caffeine"
+    },
+    {
+      "name": "quickpay.payment.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.observability.logging.correlation-id",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$LoggingConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.observability.metrics.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$MetricsConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.observability.tracing.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$ObservabilityConfig$TracingConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.providers",
+      "type": "java.util.List<com.quickpay.payment.config.QuickPayProperties$ProviderConfig>",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties"
+    },
+    {
+      "name": "quickpay.payment.retry.backoff-delay",
+      "type": "java.time.Duration",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$RetryConfig",
+      "defaultValue": "1s"
+    },
+    {
+      "name": "quickpay.payment.retry.max-attempts",
+      "type": "java.lang.Integer",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$RetryConfig",
+      "defaultValue": 3
+    },
+    {
+      "name": "quickpay.payment.security.jwt.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$SecurityConfig$JwtConfig",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.payment.security.jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.quickpay.payment.config.QuickPayProperties$SecurityConfig$JwtConfig",
+      "defaultValue": "default-secret"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

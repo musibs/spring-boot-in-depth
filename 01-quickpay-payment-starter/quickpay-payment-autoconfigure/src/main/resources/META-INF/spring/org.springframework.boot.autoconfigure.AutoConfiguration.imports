@@ -1,0 +1,2 @@
+com.quickpay.payment.autoconfigure.QuickPayAutoConfiguration
+com.quickpay.payment.autoconfigure.PaymentCacheAutoConfiguration

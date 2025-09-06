@@ -1,0 +1,12 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://repo.spring.io/snapshot' }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'quickpay-payment-spring-boot-starter'
+
+include 'quickpay-payment-autoconfigure'
+include 'quickpay-payment-spring-boot-starter'
+include 'quickpay-sample-app'

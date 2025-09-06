@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: quickpay-app
+
+  profiles:
+    active: dev
+
+
+quickpay:
+  logging:
+    enabled: true
+    ecs:
+      enabled: false
+    service:
+      name: quickpay-app
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.quickpay: DEBUG

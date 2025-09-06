@@ -1,0 +1,5 @@
+# QuickPay Logging Auto-Configuration
+# Register the EnvironmentPostProcessor to run early in Spring Boot lifecycle
+
+org.springframework.boot.env.EnvironmentPostProcessor=\
+com.quickpay.logging.autoconfigure.QuickPayLoggingEnvironmentPostProcessor

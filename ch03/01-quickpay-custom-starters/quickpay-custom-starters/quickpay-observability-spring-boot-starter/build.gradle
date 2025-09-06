@@ -1,0 +1,6 @@
+dependencies {
+    api project(':quickpay-observability-spring-boot-autoconfigure')
+    api libs.spring.boot.starter.actuator
+    
+    testImplementation libs.bundles.testing
+}
