@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.0-SNAPSHOT'
+    id 'org.springframework.boot' version '4.0.0-M2'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -26,14 +26,15 @@ repositories {
     maven { url = 'https://repo.spring.io/snapshot' }
 }
 
-dependencyLocking {
-    lockAllConfigurations()
-    lockMode = LockMode.STRICT
-}
+// dependencyLocking {
+//     lockAllConfigurations()
+//     lockMode = LockMode.STRICT
+// }
 
 dependencies {
-    implementation 'com.quickpay:quickpay-logging-spring-boot-starter:1.0.0'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.quickpay:quickpay-logging-spring-boot-starter:2.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

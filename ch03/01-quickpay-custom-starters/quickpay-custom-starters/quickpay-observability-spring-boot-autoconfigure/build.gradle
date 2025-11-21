@@ -1,9 +1,0 @@
-dependencies {
-    api libs.bundles.spring.boot.core
-    api libs.spring.boot.starter.actuator
-    api libs.micrometer.core
-    api libs.micrometer.registry.prometheus
-    api libs.micrometer.tracing
-    
-    testImplementation libs.bundles.testing
-}

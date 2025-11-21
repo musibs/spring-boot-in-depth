@@ -1,94 +1,196 @@
 package com.quickpay.logging.autoconfigure;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.Map;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Configuration properties for QuickPay logging functionality.
  *
- *
- * <p>Configuration Example:</p>
- * <pre>{@code
- * quickpay:
- *   logging:
- *     enabled: true
- *     ecs:
- *       enabled: true
- *     service:
- *       name: "payment-service"
- *       version: "1.0.0"
- *       environment: "production"
- * }</pre>
- *
- * @param enabled Whether QuickPay logging is enabled (master switch)
- * @param ecs     Elastic Common Schema configuration settings
- * @param service Service identification and metadata configuration
  * @author Somnath Musib
- * @see EcsConfig
- * @see ServiceConfig
  * @since 1.0.0
  */
 @ConfigurationProperties(prefix = "quickpay.logging")
-public record QuickPayLoggingProperties(
-        boolean enabled,
-        EcsConfig ecs,
-        ServiceConfig service
-) {
+@Validated
+public class QuickPayLoggingProperties {
 
     /**
-     * Elastic Common Schema (ECS) configuration for structured logging compliance.
-     *
-     * <p>Configuration Example:</p>
-     * <pre>{@code
-     * ecs:
-     *   enabled: true
-     * }</pre>
-     *
-     * @param enabled Whether ECS compliance is enabled for log formatting
-     * @see <a href="https://www.elastic.co/guide/en/ecs/current/index.html">ECS Specification</a>
-     * @since 1.0.0
+     * Whether QuickPay logging is enabled.
+     * Default is true.
      */
-    public record EcsConfig(
-            boolean enabled
-    ) {
+    private boolean enabled = true;
+
+    /**
+     * ECS (Elastic Common Schema) configuration for structured logging.
+     */
+    @Valid
+    private EcsConfig ecs = new EcsConfig();
+
+    /**
+     * Transaction correlation configuration for tracking requests across services.
+     */
+    @Valid
+    private CorrelationConfig correlation = new CorrelationConfig();
+
+    /**
+     * Service identification configuration.
+     */
+    @Valid
+    private ServiceConfig service = new ServiceConfig();
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public EcsConfig getEcs() {
+        return ecs;
+    }
+
+    public void setEcs(EcsConfig ecs) {
+        this.ecs = ecs;
+    }
+
+    public CorrelationConfig getCorrelation() {
+        return correlation;
+    }
+
+    public void setCorrelation(CorrelationConfig correlation) {
+        this.correlation = correlation;
+    }
+
+    public ServiceConfig getService() {
+        return service;
+    }
+
+    public void setService(ServiceConfig service) {
+        this.service = service;
+    }
 
     /**
-     * Service identification and metadata configuration for log correlation.
-     * <p>
-     * Provides service identity information that gets included in all log events
-     * for distributed system tracing, service correlation, and operational visibility.
-     * This information is essential for microservices architectures and multi-service deployments.
-     * </p>
-     *
-     * <p>Configuration Example:</p>
-     * <pre>{@code
-     * service:
-     *   name: "payment-gateway-service"
-     *   version: "2.1.0"
-     *   environment: "production"
-     *   metadata:
-     *     region: "us-east-1"
-     *     cluster: "payment-cluster-prod"
-     * }</pre>
-     *
-     * @param name        Service name for identification in logs and monitoring systems
-     * @param version     Service version for deployment tracking and troubleshooting
-     * @param environment Deployment environment (e.g., "development", "staging", "production")
-     * @param metadata    Additional service metadata for operational context (region, cluster, etc.)
-     * @since 1.0.0
+     * ECS configuration for structured logging.
      */
-    public record ServiceConfig(
-            String name,
-            String version,
-            String environment,
-            Map<String, String> metadata
-    ) {
-        public ServiceConfig {
-            metadata = metadata != null ? Map.copyOf(metadata) : Map.of();
+    public static class EcsConfig {
+        private boolean piiMasking = true;
+
+        public boolean isPiiMasking() {
+            return piiMasking;
+        }
+
+        public void setPiiMasking(boolean piiMasking) {
+            this.piiMasking = piiMasking;
         }
     }
 
+    /**
+     * Transaction correlation configuration.
+     */
+    public static class CorrelationConfig {
+        private boolean enabled = true;
+
+        @NotBlank
+        private String headerName = "X-Transaction-ID";
+
+        private boolean generateIfMissing = true;
+        private boolean addToResponse = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getHeaderName() {
+            return headerName;
+        }
+
+        public void setHeaderName(String headerName) {
+            if (headerName != null && headerName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Header name cannot be empty");
+            }
+            this.headerName = headerName;
+        }
+
+        public boolean isGenerateIfMissing() {
+            return generateIfMissing;
+        }
+
+        public void setGenerateIfMissing(boolean generateIfMissing) {
+            this.generateIfMissing = generateIfMissing;
+        }
+
+        public boolean isAddToResponse() {
+            return addToResponse;
+        }
+
+        public void setAddToResponse(boolean addToResponse) {
+            this.addToResponse = addToResponse;
+        }
+    }
+
+    /**
+     * Service identification configuration.
+     */
+    public static class ServiceConfig {
+        @NotBlank
+        private String name = "quickpay-service";
+
+        @NotBlank
+        private String version = "1.0.0";
+
+        @NotBlank
+        private String environment = "development";
+
+        private Map<String, String> metadata = Map.of();
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            if (name != null && name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Service name cannot be empty");
+            }
+            this.name = name;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            if (version != null && version.trim().isEmpty()) {
+                throw new IllegalArgumentException("Service version cannot be empty");
+            }
+            this.version = version;
+        }
+
+        public String getEnvironment() {
+            return environment;
+        }
+
+        public void setEnvironment(String environment) {
+            if (environment != null && environment.trim().isEmpty()) {
+                throw new IllegalArgumentException("Service environment cannot be empty");
+            }
+            this.environment = environment;
+        }
+
+        public Map<String, String> getMetadata() {
+            return metadata;
+        }
+
+        public void setMetadata(Map<String, String> metadata) {
+            this.metadata = metadata != null ? Map.copyOf(metadata) : Map.of();
+        }
+    }
 }

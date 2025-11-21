@@ -1,0 +1,44 @@
+@startuml Auto-Configuration Structure
+
+
+
+    class PaymentProviderAutoConfiguration <<@AutoConfiguration>> {
+        + paymentProviderRegistry(ObjectProvider<PaymentProviderClient>)
+        + paymentProviderRouter(PaymentProviderRegistry)
+        + providerHealthCheck(ObjectProvider<PaymentProviderRegistry>)
+    }
+
+    class StripeAutoConfiguration <<@AutoConfiguration>> {
+        {field} @Order(1)
+        + stripeClient(...)
+    }
+
+    class PayPalAutoConfiguration <<@AutoConfiguration>> {
+        {field} @Order(2)
+        + payPalClient(...)
+    }
+
+
+StripeAutoConfiguration -[#blue]-> PaymentProviderAutoConfiguration : <<before>>
+PayPalAutoConfiguration -[#blue]-> PaymentProviderAutoConfiguration : <<before>>
+
+note right of StripeAutoConfiguration
+  Runs BEFORE core config
+  Higher priority (@Order(1))
+  Creates StripeClient bean
+end note
+
+note right of PayPalAutoConfiguration
+  Runs BEFORE core config
+  Lower priority (@Order(2))
+  Creates PayPalClient bean
+end note
+
+note bottom of PaymentProviderAutoConfiguration
+  Core auto-configuration
+  Runs AFTER provider configs
+  Creates: Registry, Router, HealthCheck
+  Uses ObjectProvider to collect all clients
+end note
+
+@enduml

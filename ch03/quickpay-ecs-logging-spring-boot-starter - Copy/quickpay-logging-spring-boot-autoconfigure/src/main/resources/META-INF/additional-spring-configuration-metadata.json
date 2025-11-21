@@ -1,0 +1,116 @@
+{
+  "groups": [
+    {
+      "name": "quickpay.logging",
+      "type": "com.quickpay.logging.autoconfigure.QuickPayLoggingProperties",
+      "description": "QuickPay ECS logging configuration properties."
+    },
+    {
+      "name": "quickpay.logging.ecs",
+      "type": "com.quickpay.logging.autoconfigure.QuickPayLoggingProperties$EcsConfig",
+      "description": "Elastic Common Schema (ECS) configuration. ECS format is always enforced when QuickPay logging is enabled."
+    },
+    {
+      "name": "quickpay.logging.correlation",
+      "type": "com.quickpay.logging.autoconfigure.QuickPayLoggingProperties$CorrelationConfig", 
+      "description": "Transaction correlation configuration for distributed tracing."
+    },
+    {
+      "name": "quickpay.logging.service",
+      "type": "com.quickpay.logging.autoconfigure.QuickPayLoggingProperties$ServiceConfig",
+      "description": "Service identification and metadata configuration for log correlation."
+    }
+  ],
+  "properties": [
+    {
+      "name": "quickpay.logging.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether QuickPay ECS logging is enabled (master switch).",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.logging.ecs.pii-masking",
+      "type": "java.lang.Boolean",
+      "description": "Whether to automatically mask PII data in logs for security compliance. ECS format is always enforced regardless of this setting.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.logging.correlation.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether transaction correlation is enabled.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.logging.correlation.header-name",
+      "type": "java.lang.String",
+      "description": "HTTP header name for transaction ID extraction.",
+      "defaultValue": "X-Transaction-ID"
+    },
+    {
+      "name": "quickpay.logging.correlation.generate-if-missing",
+      "type": "java.lang.Boolean",
+      "description": "Whether to generate transaction ID if not present in request.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.logging.correlation.add-to-response",
+      "type": "java.lang.Boolean",
+      "description": "Whether to add transaction ID to response headers.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.logging.service.name",
+      "type": "java.lang.String",
+      "description": "Service name for identification in logs and monitoring systems.",
+      "defaultValue": "quickpay-service"
+    },
+    {
+      "name": "quickpay.logging.service.version",
+      "type": "java.lang.String",
+      "description": "Service version for deployment tracking and troubleshooting.",
+      "defaultValue": "1.0.0"
+    },
+    {
+      "name": "quickpay.logging.service.environment",
+      "type": "java.lang.String",
+      "description": "Deployment environment (e.g., development, staging, production).",
+      "defaultValue": "development"
+    }
+  ],
+  "hints": [
+    {
+      "name": "quickpay.logging.service.environment",
+      "values": [
+        {
+          "value": "development",
+          "description": "Development environment with verbose logging."
+        },
+        {
+          "value": "staging",
+          "description": "Staging environment for pre-production testing."
+        },
+        {
+          "value": "production",
+          "description": "Production environment with security-focused logging."
+        }
+      ]
+    },
+    {
+      "name": "quickpay.logging.correlation.header-name",
+      "values": [
+        {
+          "value": "X-Transaction-ID",
+          "description": "Standard QuickPay transaction header."
+        },
+        {
+          "value": "X-Correlation-ID",
+          "description": "Generic correlation header."
+        },
+        {
+          "value": "X-Trace-ID",
+          "description": "Distributed tracing header."
+        }
+      ]
+    }
+  ]
+}

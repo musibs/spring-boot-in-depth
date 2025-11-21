@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: quickpay-auto-configuration
+
+# QuickPay Payment Provider Configuration
+quickpay:
+  providers:
+    # Master switch for all provider integrations
+    enabled: true
+
+    # Enable provider health checks
+    health-check-enabled: true
+
+    # Stripe Configuration
+    stripe:
+      enabled: true
+      api-key: sk_test_example_stripe_key_12345
+      base-url: https://api.stripe.com
+
+    # PayPal Configuration
+    paypal:
+      enabled: true
+      client-id: AQkkgJRCwGvJ5Ue_example_paypal_client_id
+      client-secret: EH2nP5gP0QN9FUf_example_paypal_secret
+      base-url: https://api.paypal.com
+      mode: sandbox  # or 'live' for production
+
+    # Common settings for all providers
+    common:
+      timeout: 30s
+      retry-attempts: 3
+
+# Logging configuration (optional - for demo purposes)
+logging:
+  level:
+    com.quickpay: INFO
+    org.springframework.boot.autoconfigure: INFO

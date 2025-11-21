@@ -1,0 +1,3 @@
+dependencies {
+    api project(':quickpay-logging-spring-boot-autoconfigure')
+}

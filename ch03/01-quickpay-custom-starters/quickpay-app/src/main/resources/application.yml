@@ -1,31 +1,13 @@
+# QuickPay Demo Application Configuration
 server:
-  port: 8081
+  port: 8080
 
 spring:
   application:
-    name: quickpay-app
-
-  profiles:
-    active: dev
-
+    name: quickpay-demo-app
 
 quickpay:
   logging:
-    enabled: true
-    ecs:
-      enabled: true
-    service:
-      name: quickpay-app-ecs
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: always
-
-logging:
-  level:
-    com.quickpay: DEBUG
+    enabled: false
+    pii-masking: false
+    sensitive-fields: iban

@@ -1,0 +1,321 @@
+@startuml QuickPay Auto-Configuration Class Diagram
+
+' ===================================================================
+' AUTO-CONFIGURATION LAYER
+' ===================================================================
+
+package "com.quickpay.autoconfigure" {
+    
+    class PaymentProviderAutoConfiguration <<@AutoConfiguration>> {
+        + paymentProviderRegistry(ObjectProvider<PaymentProviderClient>): PaymentProviderRegistry
+        + paymentProviderRouter(PaymentProviderRegistry): PaymentProviderRouter
+        + providerHealthCheck(ObjectProvider<PaymentProviderRegistry>): ProviderHealthCheck
+    }
+    
+    class StripeAutoConfiguration <<@AutoConfiguration>> {
+        + stripeClient(QuickPayProviderProperties, RestClient, StripeAuthenticationHandler): StripeClient
+    }
+    
+    class PayPalAutoConfiguration <<@AutoConfiguration>> {
+        + payPalClient(QuickPayProviderProperties, RestClient, PayPalAuthenticationHandler): PayPalClient
+    }
+    
+    annotation ConditionalOnProvider {
+        + value(): PaymentProvider
+        + matchIfMissing(): boolean
+    }
+    
+    class ConditionalOnProviderCondition {
+        + getMatchOutcome(ConditionContext, AnnotatedTypeMetadata): ConditionOutcome
+    }
+}
+
+' ===================================================================
+' CONFIGURATION LAYER
+' ===================================================================
+
+package "com.quickpay.config" {
+    
+    class HttpClientConfiguration <<@Configuration>> {
+        + restClientBuilder(QuickPayProviderProperties): RestClient.Builder
+        + restClient(RestClient.Builder): RestClient
+    }
+    
+    class StripeSecurityConfiguration <<@Configuration>> {
+        + stripeAuthenticationHandler(): StripeAuthenticationHandler
+    }
+    
+    class PayPalSecurityConfiguration <<@Configuration>> {
+        + payPalAuthenticationHandler(): PayPalAuthenticationHandler
+    }
+    
+    class "StripeSecurityConfiguration.StripeAuthenticationHandler" as StripeAuthHandler {
+        + createAuthorizationHeader(String): String
+        + isValidApiKey(String): boolean
+    }
+    
+    class "PayPalSecurityConfiguration.PayPalAuthenticationHandler" as PayPalAuthHandler {
+        + createAuthorizationHeader(String, String): String
+        + isValidCredentials(String, String): boolean
+    }
+    
+    class QuickPayProviderProperties <<Record>> <<@ConfigurationProperties>> {
+        + enabled: boolean
+        + stripe: StripeProperties
+        + paypal: PaypalProperties
+        + common: CommonProperties
+    }
+    
+    class "QuickPayProviderProperties.StripeProperties" as StripeProps <<Record>> {
+        + enabled: boolean
+        + apiKey: String
+        + baseUrl: String
+    }
+    
+    class "QuickPayProviderProperties.PaypalProperties" as PayPalProps <<Record>> {
+        + enabled: boolean
+        + clientId: String
+        + clientSecret: String
+        + baseUrl: String
+        + mode: String
+    }
+    
+    class "QuickPayProviderProperties.CommonProperties" as CommonProps <<Record>> {
+        + timeout: Duration
+        + retryAttempts: int
+    }
+    
+    class ProviderConfig {
+        - baseUrl: String
+        - apiKey: String
+        - timeout: Duration
+        - retryAttempts: int
+        + getBaseUrl(): String
+        + getApiKey(): String
+        + getTimeout(): Duration
+        + getRetryAttempts(): int
+    }
+}
+
+' ===================================================================
+' CLIENT LAYER
+' ===================================================================
+
+package "com.quickpay.client" {
+    
+    interface PaymentProviderClient {
+        + getProvider(): PaymentProvider
+        + processPayment(PaymentRequest): PaymentResponse
+        + isHealthy(): boolean
+    }
+    
+    class StripeClient {
+        - config: ProviderConfig
+        - restClient: RestClient
+        - authHandler: StripeAuthenticationHandler
+        + StripeClient(ProviderConfig, RestClient, StripeAuthenticationHandler)
+        + getProvider(): PaymentProvider
+        + processPayment(PaymentRequest): PaymentResponse
+        + isHealthy(): boolean
+    }
+    
+    class PayPalClient {
+        - config: ProviderConfig
+        - restClient: RestClient
+        - authHandler: PayPalAuthenticationHandler
+        + PayPalClient(ProviderConfig, RestClient, PayPalAuthenticationHandler)
+        + getProvider(): PaymentProvider
+        + processPayment(PaymentRequest): PaymentResponse
+        + isHealthy(): boolean
+    }
+    
+    class PaymentProviderRegistry {
+        - clients: Map<PaymentProvider, PaymentProviderClient>
+        + PaymentProviderRegistry(List<PaymentProviderClient>)
+        + getClient(PaymentProvider): Optional<PaymentProviderClient>
+        + getRegisteredProviders(): List<PaymentProvider>
+    }
+    
+    class PaymentProviderRouter {
+        - registry: PaymentProviderRegistry
+        + PaymentProviderRouter(PaymentProviderRegistry)
+        + selectProvider(PaymentRequest): PaymentProviderClient
+        + selectProvider(PaymentProvider): PaymentProviderClient
+    }
+}
+
+' ===================================================================
+' DOMAIN LAYER
+' ===================================================================
+
+package "com.quickpay.domain" {
+    
+    enum PaymentProvider {
+        STRIPE
+        PAYPAL
+    }
+    
+    class PaymentRequest {
+        - amount: BigDecimal
+        - currency: PaymentCurrency
+        - description: String
+        + amount(): BigDecimal
+        + currency(): PaymentCurrency
+        + description(): String
+    }
+    
+    class PaymentResponse {
+        - transactionId: String
+        - status: PaymentStatus
+        - message: String
+        + transactionId(): String
+        + status(): PaymentStatus
+        + message(): String
+    }
+    
+    enum PaymentCurrency {
+        USD
+        EUR
+        GBP
+    }
+    
+    enum PaymentStatus {
+        SUCCESS
+        FAILED
+        PENDING
+    }
+}
+
+' ===================================================================
+' HEALTH LAYER
+' ===================================================================
+
+package "com.quickpay.health" {
+    
+    class ProviderHealthCheck {
+        - registry: PaymentProviderRegistry
+        + ProviderHealthCheck(PaymentProviderRegistry)
+        + checkHealth(): HealthStatus
+        + checkProviderHealth(PaymentProvider): boolean
+    }
+    
+    class HealthStatus {
+        - healthy: boolean
+        - providers: Map<PaymentProvider, Boolean>
+        + isHealthy(): boolean
+        + getProviders(): Map<PaymentProvider, Boolean>
+    }
+}
+
+' ===================================================================
+' RELATIONSHIPS - Auto-Configuration
+' ===================================================================
+
+' Auto-configuration creates beans
+PaymentProviderAutoConfiguration ..> PaymentProviderRegistry : <<creates>>
+PaymentProviderAutoConfiguration ..> PaymentProviderRouter : <<creates>>
+PaymentProviderAutoConfiguration ..> ProviderHealthCheck : <<creates>>
+PaymentProviderAutoConfiguration --> QuickPayProviderProperties : <<uses>>
+
+StripeAutoConfiguration ..> StripeClient : <<creates>>
+StripeAutoConfiguration --> StripeSecurityConfiguration : <<@Import>>
+StripeAutoConfiguration --> QuickPayProviderProperties : <<uses>>
+
+PayPalAutoConfiguration ..> PayPalClient : <<creates>>
+PayPalAutoConfiguration --> PayPalSecurityConfiguration : <<@Import>>
+PayPalAutoConfiguration --> QuickPayProviderProperties : <<uses>>
+
+PaymentProviderAutoConfiguration --> HttpClientConfiguration : <<@Import>>
+
+' Auto-configuration annotations
+StripeAutoConfiguration --> ConditionalOnProvider : <<annotated>>
+PayPalAutoConfiguration --> ConditionalOnProvider : <<annotated>>
+ConditionalOnProvider --> ConditionalOnProviderCondition : <<delegates to>>
+
+' ===================================================================
+' RELATIONSHIPS - Configuration
+' ===================================================================
+
+HttpClientConfiguration ..> RestClient : <<creates>>
+
+StripeSecurityConfiguration ..> StripeAuthHandler : <<creates>>
+PayPalSecurityConfiguration ..> PayPalAuthHandler : <<creates>>
+
+QuickPayProviderProperties *-- StripeProps : contains
+QuickPayProviderProperties *-- PayPalProps : contains
+QuickPayProviderProperties *-- CommonProps : contains
+
+' ===================================================================
+' RELATIONSHIPS - Client Layer
+' ===================================================================
+
+StripeClient ..|> PaymentProviderClient : implements
+PayPalClient ..|> PaymentProviderClient : implements
+
+StripeClient --> ProviderConfig : uses
+StripeClient --> RestClient : uses
+StripeClient --> StripeAuthHandler : uses
+
+PayPalClient --> ProviderConfig : uses
+PayPalClient --> RestClient : uses
+PayPalClient --> PayPalAuthHandler : uses
+
+PaymentProviderRegistry o-- PaymentProviderClient : manages
+PaymentProviderRouter --> PaymentProviderRegistry : uses
+
+' ===================================================================
+' RELATIONSHIPS - Domain
+' ===================================================================
+
+PaymentProviderClient --> PaymentRequest : processes
+PaymentProviderClient --> PaymentResponse : returns
+PaymentProviderClient --> PaymentProvider : identifies
+
+PaymentRequest --> PaymentCurrency : uses
+PaymentResponse --> PaymentStatus : uses
+
+' ===================================================================
+' RELATIONSHIPS - Health
+' ===================================================================
+
+ProviderHealthCheck --> PaymentProviderRegistry : monitors
+ProviderHealthCheck ..> HealthStatus : returns
+
+' ===================================================================
+' NOTES
+' ===================================================================
+
+note right of PaymentProviderAutoConfiguration
+  Core auto-configuration
+  Runs after provider configs
+  Uses ObjectProvider pattern
+  for dynamic bean collection
+end note
+
+note right of StripeAutoConfiguration
+  @AutoConfiguration(before = 
+    PaymentProviderAutoConfiguration.class)
+  @ConditionalOnProvider(STRIPE)
+  @Order(1) - Higher priority
+end note
+
+note right of PayPalAutoConfiguration
+  @AutoConfiguration(before = 
+    PaymentProviderAutoConfiguration.class)
+  @ConditionalOnProvider(PAYPAL)
+  @Order(2) - Lower priority
+end note
+
+note right of PaymentProviderRegistry
+  Uses LinkedHashMap to
+  preserve @Order from
+  ObjectProvider.orderedStream()
+end note
+
+note right of QuickPayProviderProperties
+  Java Record with nested Records
+  @ConfigurationProperties
+  @Validated with Jakarta annotations
+end note
+
+@enduml

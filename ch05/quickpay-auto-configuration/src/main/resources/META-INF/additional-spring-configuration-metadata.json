@@ -1,0 +1,110 @@
+{
+  "groups": [
+    {
+      "name": "quickpay.providers",
+      "type": "com.quickpay.config.QuickPayProviderProperties",
+      "description": "Configuration properties for QuickPay payment provider integration."
+    },
+    {
+      "name": "quickpay.providers.stripe",
+      "type": "com.quickpay.config.QuickPayProviderProperties$StripeProperties",
+      "description": "Stripe payment provider configuration."
+    },
+    {
+      "name": "quickpay.providers.paypal",
+      "type": "com.quickpay.config.QuickPayProviderProperties$PaypalProperties",
+      "description": "PayPal payment provider configuration."
+    },
+    {
+      "name": "quickpay.providers.common",
+      "type": "com.quickpay.config.QuickPayProviderProperties$CommonProperties",
+      "description": "Common configuration shared across all payment providers."
+    }
+  ],
+  "properties": [
+    {
+      "name": "quickpay.providers.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable QuickPay payment provider integration.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.providers.health-check-enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable provider health checks.",
+      "defaultValue": true
+    },
+    {
+      "name": "quickpay.providers.stripe.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable Stripe payment provider.",
+      "defaultValue": false
+    },
+    {
+      "name": "quickpay.providers.stripe.api-key",
+      "type": "java.lang.String",
+      "description": "Stripe API key (must start with 'sk_' for secret key or 'pk_' for publishable key)."
+    },
+    {
+      "name": "quickpay.providers.stripe.base-url",
+      "type": "java.lang.String",
+      "description": "Stripe API base URL.",
+      "defaultValue": "https://api.stripe.com"
+    },
+    {
+      "name": "quickpay.providers.paypal.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable PayPal payment provider.",
+      "defaultValue": false
+    },
+    {
+      "name": "quickpay.providers.paypal.client-id",
+      "type": "java.lang.String",
+      "description": "PayPal client ID for OAuth authentication."
+    },
+    {
+      "name": "quickpay.providers.paypal.client-secret",
+      "type": "java.lang.String",
+      "description": "PayPal client secret for OAuth authentication."
+    },
+    {
+      "name": "quickpay.providers.paypal.base-url",
+      "type": "java.lang.String",
+      "description": "PayPal API base URL.",
+      "defaultValue": "https://api.paypal.com"
+    },
+    {
+      "name": "quickpay.providers.paypal.mode",
+      "type": "java.lang.String",
+      "description": "PayPal mode: 'sandbox' for testing or 'live' for production.",
+      "defaultValue": "sandbox"
+    },
+    {
+      "name": "quickpay.providers.common.timeout",
+      "type": "java.time.Duration",
+      "description": "Request timeout for provider API calls.",
+      "defaultValue": "30s"
+    },
+    {
+      "name": "quickpay.providers.common.retry-attempts",
+      "type": "java.lang.Integer",
+      "description": "Number of retry attempts on provider API failures.",
+      "defaultValue": 3
+    }
+  ],
+  "hints": [
+    {
+      "name": "quickpay.providers.paypal.mode",
+      "values": [
+        {
+          "value": "sandbox",
+          "description": "PayPal sandbox environment for testing."
+        },
+        {
+          "value": "live",
+          "description": "PayPal live environment for production."
+        }
+      ]
+    }
+  ]
+}

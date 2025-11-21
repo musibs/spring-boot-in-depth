@@ -1,0 +1,53 @@
+@startuml Custom Conditional Annotation
+
+annotation ConditionalOnProvider {
+    + value(): PaymentProvider
+    + matchIfMissing(): boolean
+}
+
+class ConditionalOnProviderCondition {
+    + getMatchOutcome(ConditionContext, AnnotatedTypeMetadata): ConditionOutcome
+    - constructPropertyName(PaymentProvider): String
+    - evaluateCondition(String): boolean
+}
+
+enum PaymentProvider {
+    STRIPE
+    PAYPAL
+}
+
+class StripeAutoConfiguration {
+}
+
+class PayPalAutoConfiguration {
+}
+
+ConditionalOnProvider --> ConditionalOnProviderCondition : <<evaluated by>>
+ConditionalOnProvider ..> PaymentProvider : <<uses>>
+
+StripeAutoConfiguration --> ConditionalOnProvider : <<@ConditionalOnProvider(STRIPE)>>
+PayPalAutoConfiguration --> ConditionalOnProvider : <<@ConditionalOnProvider(PAYPAL)>>
+
+note right of ConditionalOnProviderCondition
+  Extends SpringBootCondition
+
+  Logic:
+  1. Extract provider from annotation
+  2. Build property name:
+     "quickpay.providers.{provider}.enabled"
+  3. Check property value
+  4. Return ConditionOutcome with message
+
+  Example: quickpay.providers.stripe.enabled
+end note
+
+note left of ConditionalOnProvider
+  Custom conditional annotation
+  Encapsulates domain logic
+  More readable than @ConditionalOnProperty
+
+  Usage:
+  @ConditionalOnProvider(PaymentProvider.STRIPE)
+end note
+
+@enduml

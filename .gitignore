@@ -29,3 +29,8 @@ CLAUDE.md
 
 .idea
 bin
+
+.gradle
+.puml
+*.md
+*.MD

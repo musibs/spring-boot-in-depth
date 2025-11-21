@@ -1,0 +1,14 @@
+# QuickPay Auto-Configuration Imports
+# This file registers auto-configurations with Spring Boot (Spring Boot 3+ format)
+#
+# Auto-configurations are processed in the order listed here, but can be further
+# controlled using @AutoConfigureBefore and @AutoConfigureAfter annotations.
+#
+# See: https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration
+
+# Provider-specific auto-configurations (created before the core configuration)
+com.quickpay.autoconfigure.StripeAutoConfiguration
+com.quickpay.autoconfigure.PayPalAutoConfiguration
+
+# Core auto-configuration (depends on provider configurations)
+com.quickpay.autoconfigure.PaymentProviderAutoConfiguration
