@@ -1,0 +1,15 @@
+dependencies {
+    // Core Spring Boot auto-configuration
+    api 'org.springframework.boot:spring-boot-autoconfigure:4.0.0-M2'
+    api 'org.springframework.boot:spring-boot-configuration-processor:4.0.0-M2'
+    
+    // Web support for servlet filter (transaction correlation)
+    compileOnly 'org.springframework.boot:spring-boot-starter-webmvc:4.0.0-M2'
+    
+    // Validation for configuration properties
+    api 'jakarta.validation:jakarta.validation-api:3.0.2'
+    
+    // Test dependencies (minimal)
+    testImplementation 'org.springframework.boot:spring-boot-test:4.0.0-M2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}

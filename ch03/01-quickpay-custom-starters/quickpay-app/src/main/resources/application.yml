@@ -1,0 +1,13 @@
+# QuickPay Demo Application Configuration
+server:
+  port: 8080
+
+spring:
+  application:
+    name: quickpay-demo-app
+
+quickpay:
+  logging:
+    enabled: false
+    pii-masking: false
+    sensitive-fields: iban

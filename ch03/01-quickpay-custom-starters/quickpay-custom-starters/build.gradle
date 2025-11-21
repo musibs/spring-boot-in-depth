@@ -1,0 +1,68 @@
+plugins {
+	id 'org.springframework.boot' version '4.0.0-M2' apply false
+	id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+allprojects {
+	group = 'com.quickpay'
+	version = '1.0.0'
+
+	repositories {
+		mavenCentral()
+		maven { url = 'https://repo.spring.io/snapshot' }
+	}
+}
+
+subprojects {
+	apply plugin: 'java-library'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'maven-publish'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(24)
+		}
+		withSourcesJar()
+		withJavadocJar()
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+		}
+	}
+
+	dependencies {
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				from components.java
+				
+				pom {
+					name = project.name
+					description = 'QuickPay Logging Spring Boot Starter'
+					
+					developers {
+						developer {
+							id = 'quickpay'
+							name = 'QuickPay Team'
+							email = 'team@quickpay.com'
+						}
+					}
+				}
+			}
+		}
+		
+		repositories {
+			mavenLocal()
+		}
+	}
+}

@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: quickpay-app
+
+quickpay:
+  logging:
+    enabled: true
+    jsonFormat:
+      enabled: true
+      prettyPrint: true
+    correlation:
+      enabled: true
+      headerName: "X-Transaction-ID" 
+      generateIfMissing: true
+  
+  observability:
+    enabled: true
+    metrics:
+      enabled: true
+      prefix: "quickpay_sample"
+    tracing:
+      enabled: true
+      serviceName: "quickpay-sample-app"
+      samplingRate: 1.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.quickpay: DEBUG
+    org.springframework.web: DEBUG

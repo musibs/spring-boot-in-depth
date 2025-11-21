@@ -1,0 +1,21 @@
+quickpay:
+  payment:
+    enabled: true
+    providers:
+      - name: "mock-provider"
+        enabled: true
+        timeout: 30s
+    cache:
+      enabled: true
+      type: "caffeine"
+      ttl: "5m"
+    retry:
+      max-attempts: 3
+      backoff-delay: "1s"
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.quickpay: DEBUG

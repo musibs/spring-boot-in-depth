@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.quickpay.app.controller.PaymentControllerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-08-09T23:40:43.649Z" hostname="DESKTOP-VBH5P79" time="1.766">
+  <properties/>
+  <testcase name="createPayment_LargeAmount_Pending()" classname="com.quickpay.app.controller.PaymentControllerTest" time="1.717"/>
+  <testcase name="getPayment_NotFound()" classname="com.quickpay.app.controller.PaymentControllerTest" time="0.027"/>
+  <testcase name="getPayment_Found()" classname="com.quickpay.app.controller.PaymentControllerTest" time="0.006"/>
+  <testcase name="createPayment_Success()" classname="com.quickpay.app.controller.PaymentControllerTest" time="0.011"/>
+  <system-out><![CDATA[09:40:45.252 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Processing payment request for amount: 15000.0 USD
+09:40:45.277 [Test worker] ERROR com.quickpay.app.controller.PaymentController -- Payment processing failed for transaction ID: txn_d9a1b35c03584e6599308d40d1e1475e
+09:40:45.373 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Retrieving payment information for transaction ID: nonexistent_txn_123
+09:40:45.376 [Test worker] WARN com.quickpay.app.controller.PaymentController -- Payment not found for transaction ID: nonexistent_txn_123
+09:40:45.399 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Retrieving payment information for transaction ID: txn_789
+09:40:45.401 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Found payment for transaction ID: txn_789
+09:40:45.407 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Processing payment request for amount: 100.5 USD
+09:40:45.410 [Test worker] INFO com.quickpay.app.controller.PaymentController -- Payment processed successfully with transaction ID: txn_d5ff7509733c48d49f2f09ea9afc7653
+]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\musib\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

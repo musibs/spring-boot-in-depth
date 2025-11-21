@@ -1,0 +1,56 @@
+@startuml Configuration Properties
+
+class QuickPayProviderProperties <<Record>> {
+    + enabled: boolean
+    + stripe: StripeProperties
+    + paypal: PaypalProperties
+    + common: CommonProperties
+}
+
+class StripeProperties <<Record>> {
+    + enabled: boolean
+    + apiKey: String {Pattern}
+    + baseUrl: String
+}
+
+class PaypalProperties <<Record>> {
+    + enabled: boolean
+    + clientId: String {NotBlank}
+    + clientSecret: String {NotBlank}
+    + baseUrl: String
+    + mode: String {Pattern: sandbox|live}
+}
+
+class CommonProperties <<Record>> {
+    + timeout: Duration
+    + retryAttempts: int {Positive}
+}
+
+QuickPayProviderProperties *-- StripeProperties
+QuickPayProviderProperties *-- PaypalProperties
+QuickPayProviderProperties *-- CommonProperties
+
+note top of QuickPayProviderProperties
+  @ConfigurationProperties("quickpay.providers")
+  @Validated
+  Immutable Java Records
+  Type-safe configuration binding
+end note
+
+note right of StripeProperties
+  Pattern validation:
+  apiKey must start with
+  "sk_" or "pk_"
+end note
+
+note right of PaypalProperties
+  Required fields validated
+  Mode: sandbox or live
+end note
+
+note right of CommonProperties
+  Duration auto-converted
+  from "30s", "5m", "1h"
+end note
+
+@enduml

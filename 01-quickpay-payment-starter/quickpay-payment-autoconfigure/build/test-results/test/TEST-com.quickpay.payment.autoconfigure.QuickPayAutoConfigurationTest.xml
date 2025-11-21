@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.quickpay.payment.autoconfigure.QuickPayAutoConfigurationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-08-09T06:41:49.253Z" hostname="DESKTOP-VBH5P79" time="1.131">
+  <properties/>
+  <testcase name="shouldNotConfigurePaymentBeansWhenDisabled()" classname="com.quickpay.payment.autoconfigure.QuickPayAutoConfigurationTest" time="0.671"/>
+  <testcase name="shouldConfigurePaymentBeansByDefault()" classname="com.quickpay.payment.autoconfigure.QuickPayAutoConfigurationTest" time="0.405"/>
+  <testcase name="shouldConfigurePaymentBeansWhenEnabled()" classname="com.quickpay.payment.autoconfigure.QuickPayAutoConfigurationTest" time="0.041"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,63 @@
+@startuml Client Layer
+
+interface PaymentProviderClient {
+    + getProvider(): PaymentProvider
+    + processPayment(PaymentRequest): PaymentResponse
+    + isHealthy(): boolean
+}
+
+class StripeClient {
+    - config: ProviderConfig
+    - restClient: RestClient
+    - authHandler: StripeAuthenticationHandler
+    --
+    + StripeClient(ProviderConfig, RestClient, StripeAuthenticationHandler)
+    + getProvider(): PaymentProvider
+    + processPayment(PaymentRequest): PaymentResponse
+    + isHealthy(): boolean
+}
+
+class PayPalClient {
+    - config: ProviderConfig
+    - restClient: RestClient
+    - authHandler: PayPalAuthenticationHandler
+    --
+    + PayPalClient(ProviderConfig, RestClient, PayPalAuthenticationHandler)
+    + getProvider(): PaymentProvider
+    + processPayment(PaymentRequest): PaymentResponse
+    + isHealthy(): boolean
+}
+
+class ProviderConfig {
+    - baseUrl: String
+    - apiKey: String
+    - timeout: Duration
+    - retryAttempts: int
+}
+
+enum PaymentProvider {
+    STRIPE
+    PAYPAL
+}
+
+StripeClient ..|> PaymentProviderClient
+PayPalClient ..|> PaymentProviderClient
+
+StripeClient --> ProviderConfig
+PayPalClient --> ProviderConfig
+
+PaymentProviderClient --> PaymentProvider : identifies
+
+note right of PaymentProviderClient
+  Common interface for all providers
+  Allows polymorphic handling
+  Registry stores implementations
+end note
+
+note bottom of ProviderConfig
+  Combines provider-specific
+  and common properties
+  Built from QuickPayProviderProperties
+end note
+
+@enduml

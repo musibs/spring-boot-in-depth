@@ -1,0 +1,3 @@
+# QuickPay Logging EnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=\
+com.quickpay.logging.system.QuickPayLoggingSystemInitializer
